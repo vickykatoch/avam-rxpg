@@ -159,7 +159,15 @@ declare namespace fin {
 		 * Waits for a hanging application. This method can be called in response to an application "not-responding" to allow the application
 		 * to continue and to generate another "not-responding" message after a certain period of time.
 		 */
-		wait(callback?: () => void, errorCallback?: (reason: string) => void): void;
+    wait(callback?: () => void, errorCallback?: (reason: string) => void): void;
+    /**
+     * Unique id of the current application
+     */
+    uuid? : string;
+    /**
+     * Name of the current application
+     */
+    name? : string;
 	}
 
 	interface ShortCutConfig {

@@ -1,0 +1,31 @@
+{
+    "devtools_port": 9090,
+    "startup_app": {
+        "name": "RX.PLAYGROUND",
+        "description": "An RXJS Playground",
+        "url": "http://localhost:4200/index.html",
+        "uuid": "RX.PLAYGROUND",
+        "autoShow": true,
+        "defaultCentered": true,
+        "applicationIcon": "http://localhost:4200/favicon.ico",
+        "frame": true,
+        "defaultHeight": 300,
+        "defaultWidth": 300,
+        "alwaysOnTop" : false,
+        "cornerRounding": {
+            "width": 10,
+            "height": 10
+        }
+
+    },
+    "runtime": {
+        "arguments": "7.53.20.20",
+        "version": "stable"
+    },
+    "shortcut": {
+        "company": "XYZ",
+        "description": "RX Playground",
+        "name": "RXPG",
+        "icon": "http://localhost:4200/favicon.ico"
+    }
+}
