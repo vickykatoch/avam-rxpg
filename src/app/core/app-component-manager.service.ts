@@ -38,5 +38,4 @@ export class AppComponentManagerService {
     host.Provider.contentWindow.document.body.appendChild(component.location.nativeElement);
     host.Provider.show();
   }
-
 }
