@@ -35,7 +35,7 @@ export class AppComponentManagerService {
       title : 'Dynamic Compnent',
       type : componentDefinition.name
     };
-    host.Provider.contentWindow.document.body.append(component.location.nativeElement);
+    host.Provider.contentWindow.document.body.appendChild(component.location.nativeElement);
     host.Provider.show();
   }
 

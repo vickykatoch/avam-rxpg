@@ -19,8 +19,8 @@
 
     },
     "runtime": {
-        "arguments": "7.53.20.20",
-        "version": "stable"
+        "version": "7.53.20.20",
+        "forceLatest": false
     },
     "shortcut": {
         "company": "XYZ",

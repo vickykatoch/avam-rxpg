@@ -11,7 +11,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
   private constructor(private windowInstance: fin.OpenFinWindow) {
     super();
     this._provider = windowInstance;
-    this.wireEvents();
+    // this.wireEvents();
   }
   //#endregion
 
@@ -34,6 +34,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   //#endregion
 
+
   //#region Helper Methods
   private static getWindowOptions(winInfo: WinInfo, url?: string): fin.WindowOptions {
     return {
@@ -44,7 +45,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
         reloadIgnoreCache: true,
       },
       alwaysOnTop: winInfo.alwaysOnTop,
-      autoShow: false,
+      autoShow: true,
       contextMenu: true, // context menu when right-clicking on a window
       cornerRounding: {
         width: 0,
@@ -110,7 +111,6 @@ export class FinWindowHostProvider extends WindowHostProvider {
     console.info('onWindowCloseRequested');
   }
   private onWindowClosed(evt: any) {
-    this.removeEvents();
     console.info('onWindowClosed');
     this.removeEvents();
   }
