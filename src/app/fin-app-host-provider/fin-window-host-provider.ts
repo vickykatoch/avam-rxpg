@@ -34,7 +34,6 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   //#endregion
 
-
   //#region Helper Methods
   private static getWindowOptions(winInfo: fromModels.WinInfo, url?: string): fin.WindowOptions {
     return {
