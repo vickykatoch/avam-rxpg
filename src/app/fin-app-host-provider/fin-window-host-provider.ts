@@ -7,6 +7,10 @@ import { Observer } from "rxjs/Observer";
 // PS: Do not directly create the instance of this class
 export class FinWindowHostProvider extends WindowHostProvider {
 
+  //#region Private Fields
+  private logger = console;
+  //#endregion
+
   //#region ctor
   private constructor(private windowInstance: fin.OpenFinWindow) {
     super();
@@ -16,8 +20,9 @@ export class FinWindowHostProvider extends WindowHostProvider {
   //#endregion
 
   //#region Singleton methods
-  static wrap(windowInstance: fin.OpenFinWindow): FinWindowHostProvider {
-    return new FinWindowHostProvider(windowInstance);
+  static wrap(windowInstance: fin.OpenFinWindow, isPersistable: boolean): Promise<FinWindowHostProvider> {
+    const winProvider = new FinWindowHostProvider(windowInstance);
+    return winProvider.readWindowInfo(isPersistable);
   }
   static createNew(options: fromModels.WinInfo): Observable<WindowHostProvider> {
     return Observable.create((observer: Observer<WindowHostProvider>) => {
@@ -83,32 +88,36 @@ export class FinWindowHostProvider extends WindowHostProvider {
     };
   }
   private wireEvents() {
+    // TODO: Most of the event handlers can be combined here, Single handler can handle most the events
     const finWindow = this._provider as fin.OpenFinWindow;
-    finWindow.addEventListener(fromModels.CLOSE_REQUESTED,this.onWindowCloseRequested.bind(this));
-    finWindow.addEventListener(fromModels.CLOSED,this.onWindowClosed.bind(this));
+    finWindow.addEventListener(fromModels.CLOSED, this.onWindowClosed.bind(this));
+
+    // finWindow.addEventListener(fromModels.CLOSE_REQUESTED, this.onWindowCloseRequested.bind(this)); 
     // finWindow.addEventListener(fromModels.HIDDEN,this.onWindowHide.bind(this));
     // finWindow.addEventListener(fromModels.SHOW_REQUESTED,this.onWindowShowRequested.bind(this));
     // finWindow.addEventListener(fromModels.SHOWN,this.onWindowShown.bind(this));
-    finWindow.addEventListener(fromModels.RESTORED,this.onWindowRestored.bind(this));
-    finWindow.addEventListener(fromModels.MINIMIZED,this.onWindowMinimized.bind(this));
-    finWindow.addEventListener(fromModels.MAXIMIZED,this.onWindowMaximized.bind(this));
-    finWindow.addEventListener(fromModels.BOUNDS_CHANGED,this.onWindowSizeChanged.bind(this));
+    finWindow.addEventListener(fromModels.RESTORED, this.onWindowRestored.bind(this));
+    finWindow.addEventListener(fromModels.MINIMIZED, this.onWindowMinimized.bind(this));
+    finWindow.addEventListener(fromModels.MAXIMIZED, this.onWindowMaximized.bind(this));
+    finWindow.addEventListener(fromModels.BOUNDS_CHANGED, this.onWindowSizeChanged.bind(this));
   }
   private removeEvents() {
     const finWindow = this._provider as fin.OpenFinWindow;
-    finWindow.removeEventListener(fromModels.CLOSE_REQUESTED,this.onWindowCloseRequested.bind(this));
-    finWindow.removeEventListener(fromModels.CLOSED,this.onWindowClosed.bind(this));
+    // finWindow.removeEventListener(fromModels.CLOSE_REQUESTED, this.onWindowCloseRequested.bind(this));
+    finWindow.removeEventListener(fromModels.CLOSED, this.onWindowClosed);
     // finWindow.removeEventListener(fromModels.HIDDEN,this.onWindowHide.bind(this));
     // finWindow.removeEventListener(fromModels.SHOW_REQUESTED,this.onWindowShowRequested.bind(this));
     // finWindow.removeEventListener(fromModels.SHOWN,this.onWindowShown.bind(this));
-    finWindow.removeEventListener(fromModels.RESTORED,this.onWindowRestored.bind(this));
-    finWindow.removeEventListener(fromModels.MINIMIZED,this.onWindowMinimized.bind(this));
-    finWindow.removeEventListener(fromModels.MAXIMIZED,this.onWindowMaximized.bind(this));
-    finWindow.removeEventListener(fromModels.BOUNDS_CHANGED,this.onWindowSizeChanged.bind(this));
+    finWindow.removeEventListener(fromModels.RESTORED, this.onWindowRestored);
+    finWindow.removeEventListener(fromModels.MINIMIZED, this.onWindowMinimized);
+    finWindow.removeEventListener(fromModels.MAXIMIZED, this.onWindowMaximized);
+    finWindow.removeEventListener(fromModels.BOUNDS_CHANGED, this.onWindowSizeChanged);
   }
   private onWindowCloseRequested(evt: any) {
+    debugger;
+    evt.force =true;
     this.removeEvents();
-    this.notifier.next({id : this.windowInfo.id, type: fromModels.CLOSE_REQUESTED});
+    this.notifier.next({ id: this.windowInfo.id, type: fromModels.CLOSE_REQUESTED });
     console.info('onWindowCloseRequested');
   }
   private onWindowClosed(evt: any) {
@@ -126,18 +135,38 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   private onWindowRestored(evt: any) {
     console.info('onWindowRestored');
-    this.notifier.next({id : this.windowInfo.id, type: fromModels.RESTORED});
+    this.notifier.next({ id: this.windowInfo.id, type: fromModels.RESTORED });
   }
   private onWindowMinimized(evt: any) {
-    this.notifier.next({id : this.windowInfo.id, type: fromModels.MINIMIZED});
+    this.notifier.next({ id: this.windowInfo.id, type: fromModels.MINIMIZED });
     console.info('onWindowMinimized');
   }
   private onWindowMaximized(evt: any) {
-    this.notifier.next({id : this.windowInfo.id, type: fromModels.MAXIMIZED});
+    this.notifier.next({ id: this.windowInfo.id, type: fromModels.MAXIMIZED });
     console.info('onWindowMaximized');
   }
   private onWindowSizeChanged(evt: any) {
     console.info('onWindowSizeChanged');
+  }
+  private readWindowInfo(isPersistable: boolean): Promise<FinWindowHostProvider> {
+    return new Promise<FinWindowHostProvider>((resolve, reject) => {
+      const finWindow = this._provider as fin.OpenFinWindow;
+      finWindow.getBounds((bounds) => {
+        this.windowInfo = this.getWinInfoFromBounds(bounds,isPersistable);
+        resolve(this);
+      }, error => reject(error));
+    });
+  }
+  private getWinInfoFromBounds(bounds: fin.WindowBounds, isPersistable): fromModels.WinInfo {
+    return {
+      id: this._provider.name,
+      name: this._provider.name,
+      left: bounds.left,
+      top: bounds.top,
+      height: bounds.height,
+      width: bounds.width,
+      isPersistable
+    };
   }
   //#endregion
 }

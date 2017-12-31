@@ -10,8 +10,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
 export class AppComponentManagerService {
-  private componentsMap = new Map<number, UIComponentBase>();
-  private subscriptions = new Map<number, Subscription>();
+  private componentsMap = new Map<number|string, UIComponentBase>();
+  private subscriptions = new Map<number|string, Subscription>();
 
   private logger = console;
 
@@ -48,7 +48,13 @@ export class AppComponentManagerService {
     }
     return id;
   }
-
+  getState() : Map<number|string, fromModels.ComponentState> {
+    const compState = new Map<number|string, fromModels.ComponentState>();
+    this.componentsMap.forEach((value,key)=> {
+      compState.set(key,value.getState());
+    });
+    return compState;
+  }
   //#region Helper Methods
   private buildComponent(compState: fromModels.ComponentState, host: WindowHostProvider, vc: ViewContainerRef, compDef: ComponentDefinition): boolean {
     const factory = this.componentFactoryResolver.resolveComponentFactory(compDef.type);

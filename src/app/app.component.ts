@@ -2,7 +2,7 @@ import { Component, Injector, ViewContainerRef } from '@angular/core';
 import { AppComponentsRepository } from './core/app-components-repository.service';
 import * as entryComponents from './entryComponents';
 import { AppComponentManagerService } from './core/app-component-manager.service';
-import { AppHostProvider } from './core';
+import { AppHostProvider, WorkspaceManager } from './core';
 import { Observable } from 'rxjs/Observable';
 // import { zip } from 'rxjs/operators';
 import { zip } from 'rxjs/observable/zip';
@@ -35,6 +35,8 @@ export class AppComponent {
     },console.error);
   }
   restoreWorkspace() {
+    // const workspaceManager = this.injector.get(WorkspaceManager) as WorkspaceManager;
+    // workspaceManager.restoreWorkspace();
     const componentBuilder = this.injector.get(AppComponentManagerService) as AppComponentManagerService;
     const observable$ = zip(
       this.getC1(componentBuilder),
@@ -46,9 +48,11 @@ export class AppComponent {
     },error=> {
       console.log(error);
     });
-
   }
-
+  saveWorkspace() {
+    const workspaceManager = this.injector.get(WorkspaceManager) as WorkspaceManager;
+    workspaceManager.saveWorkspace();
+  }
   private getC1(compBuilder: AppComponentManagerService) : Observable<boolean> {
     const compState = {
       id : compBuilder.getUniqueComponentId(),

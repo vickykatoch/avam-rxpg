@@ -27,6 +27,6 @@ export type WindowNotificationType =
 
 export interface WindowNotification {
     type : WindowNotificationType;
-    id : number;
+    id : number | string;
 }
 

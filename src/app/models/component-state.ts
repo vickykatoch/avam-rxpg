@@ -1,5 +1,5 @@
 export interface ComponentState {
-  id : number;
+  id : number|string;
   title : string;
   type : string;
   state? : any;
