@@ -61,6 +61,7 @@ export class AppComponentManagerService {
     this.buildStyleRefs().forEach(style => {
       body.appendChild(style);
     });
+    this.componentsMap.set(viewRef.viewState.id,viewRef);
     const closeSubscription = host.notifications$.pipe(
       filter(n => n.id === compState.id && (n.type === fromModels.CLOSE_REQUESTED || n.type === fromModels.CLOSED))
     ).subscribe(this.onWindowClosed.bind(this));
@@ -78,10 +79,13 @@ export class AppComponentManagerService {
   }
   private onWindowClosed(notification: fromModels.WindowNotification) {
     if (this.subscriptions.has(notification.id)) {
-      debugger;
       const subscription = this.subscriptions.get(notification.id);
       subscription.unsubscribe();
       this.subscriptions.delete(notification.id);
+    }
+    if (this.componentsMap.has(notification.id)) {
+      const component = this.componentsMap.get(notification.id);
+      component.dispose();
       this.componentsMap.delete(notification.id);
     }
   }

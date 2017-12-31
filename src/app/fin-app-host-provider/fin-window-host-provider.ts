@@ -59,7 +59,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
       defaultTop: winInfo.top,
       defaultLeft: winInfo.left,
       frame: true,  // A flag to show the frame. Default: true.
-      hideOnClose: false,
+      hideOnClose: true,
       // icon: string;
       // maxHeight?: number;
       // maximizable?: boolean;
