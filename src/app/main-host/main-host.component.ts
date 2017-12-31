@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { UIComponentBase } from '../core/host/component-base';
 import { ComponentState } from '../models';
+
 
 @Component({
   selector: 'app-main-host',
   templateUrl: './main-host.component.html',
-  styleUrls: ['./main-host.component.scss']
+  styleUrls: ['./main-host.component.scss'],
+  encapsulation : ViewEncapsulation.Native
 })
 export class MainHostComponent extends UIComponentBase  {
 

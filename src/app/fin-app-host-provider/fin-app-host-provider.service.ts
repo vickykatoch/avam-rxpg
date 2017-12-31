@@ -34,9 +34,10 @@ export class FinAppHostProviderService extends AppHostProvider {
     }
     throw new Error(`Window with the name : ${options.name} already exists`);
   }
-  getDefaultWindowOptions() : WinInfo {
+  getDefaultWindowOptions(id: number) : WinInfo {
     return {
-      name: `ChildWindow-${Math.floor(Math.random() * 10000)}`,
+      id,
+      name: `${this.appId}-${id}`,
       top: 50,
       left:50,
       height: 500,

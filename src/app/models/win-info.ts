@@ -1,4 +1,5 @@
 export interface WinInfo {
+  id : number;
   name: string; // name of the child window
   top: number;
   left: number;

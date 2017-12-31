@@ -7,5 +7,5 @@ export abstract class AppHostProvider {
   appId: string;
 
   abstract createEmptyWindow(winInfo: WinInfo) : Observable<WindowHostProvider>;
-  abstract getDefaultWindowOptions() : WinInfo;
+  abstract getDefaultWindowOptions(id: number) : WinInfo;
 }

@@ -19,7 +19,17 @@ export class AppComponent {
 
   onCreatePopup() {
     const componentBuilder = this.injector.get(AppComponentManagerService) as AppComponentManagerService;
-    componentBuilder.createPopupComponent(this.viewContainer, entryComponents.MAIN_HOST);
+    const compState = {
+      id : componentBuilder.getUniqueComponentId(),
+      title : 'MSFT',
+      type : entryComponents.MAIN_HOST,
+      state : {
+        indicative : 'MSFT.DOW'
+      }
+    };
+    componentBuilder.createPopupComponent(compState, this.viewContainer).subscribe(x=> {
+      console.log('Created Successfully');
+    },console.error);
   }
 
   // #region Helper Methods

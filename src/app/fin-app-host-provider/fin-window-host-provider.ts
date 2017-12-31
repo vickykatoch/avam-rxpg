@@ -1,5 +1,5 @@
 import { WindowHostProvider } from "../core";
-import { WinInfo } from "../models";
+import * as fromModels from "../models";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 
@@ -11,7 +11,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
   private constructor(private windowInstance: fin.OpenFinWindow) {
     super();
     this._provider = windowInstance;
-    // this.wireEvents();
+    this.wireEvents();
   }
   //#endregion
 
@@ -19,7 +19,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
   static wrap(windowInstance: fin.OpenFinWindow): FinWindowHostProvider {
     return new FinWindowHostProvider(windowInstance);
   }
-  static createNew(options: WinInfo): Observable<WindowHostProvider> {
+  static createNew(options: fromModels.WinInfo): Observable<WindowHostProvider> {
     return Observable.create((observer: Observer<WindowHostProvider>) => {
       const winOptions = FinWindowHostProvider.getWindowOptions(options);
       const finWindow = new fin.desktop.Window(winOptions, () => {
@@ -36,7 +36,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
 
 
   //#region Helper Methods
-  private static getWindowOptions(winInfo: WinInfo, url?: string): fin.WindowOptions {
+  private static getWindowOptions(winInfo: fromModels.WinInfo, url?: string): fin.WindowOptions {
     return {
       accelerator: {
         devtools: true,
@@ -60,7 +60,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
       defaultTop: winInfo.top,
       defaultLeft: winInfo.left,
       frame: true,  // A flag to show the frame. Default: true.
-      hideOnClose: true,
+      hideOnClose: false,
       // icon: string;
       // maxHeight?: number;
       // maximizable?: boolean;
@@ -85,29 +85,31 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   private wireEvents() {
     const finWindow = this._provider as fin.OpenFinWindow;
-    finWindow.addEventListener('close-requested',this.onWindowCloseRequested.bind(this));
-    finWindow.addEventListener('closed',this.onWindowClosed.bind(this));
-    finWindow.addEventListener('hidden',this.onWindowHide.bind(this));
-    finWindow.addEventListener('show-requested',this.onWindowShowRequested.bind(this));
-    finWindow.addEventListener('shown',this.onWindowShown.bind(this));
-    finWindow.addEventListener('restored',this.onWindowRestored.bind(this));
-    finWindow.addEventListener('minimized',this.onWindowMinimized.bind(this));
-    finWindow.addEventListener('maximized',this.onWindowMaximized.bind(this));
-    finWindow.addEventListener('bounds-changed',this.onWindowSizeChanged.bind(this));
+    finWindow.addEventListener(fromModels.CLOSE_REQUESTED,this.onWindowCloseRequested.bind(this));
+    finWindow.addEventListener(fromModels.CLOSED,this.onWindowClosed.bind(this));
+    // finWindow.addEventListener(fromModels.HIDDEN,this.onWindowHide.bind(this));
+    // finWindow.addEventListener(fromModels.SHOW_REQUESTED,this.onWindowShowRequested.bind(this));
+    // finWindow.addEventListener(fromModels.SHOWN,this.onWindowShown.bind(this));
+    finWindow.addEventListener(fromModels.RESTORED,this.onWindowRestored.bind(this));
+    finWindow.addEventListener(fromModels.MINIMIZED,this.onWindowMinimized.bind(this));
+    finWindow.addEventListener(fromModels.MAXIMIZED,this.onWindowMaximized.bind(this));
+    finWindow.addEventListener(fromModels.BOUNDS_CHANGED,this.onWindowSizeChanged.bind(this));
   }
   private removeEvents() {
     const finWindow = this._provider as fin.OpenFinWindow;
-    finWindow.removeEventListener('close-requested',this.onWindowCloseRequested.bind(this));
-    finWindow.removeEventListener('closed',this.onWindowClosed.bind(this));
-    finWindow.removeEventListener('hidden',this.onWindowHide.bind(this));
-    finWindow.removeEventListener('show-requested',this.onWindowShowRequested.bind(this));
-    finWindow.removeEventListener('shown',this.onWindowShown.bind(this));
-    finWindow.removeEventListener('restored',this.onWindowRestored.bind(this));
-    finWindow.removeEventListener('minimized',this.onWindowMinimized.bind(this));
-    finWindow.removeEventListener('maximized',this.onWindowMaximized.bind(this));
-    finWindow.removeEventListener('bounds-changed',this.onWindowSizeChanged.bind(this));
+    finWindow.removeEventListener(fromModels.CLOSE_REQUESTED,this.onWindowCloseRequested.bind(this));
+    finWindow.removeEventListener(fromModels.CLOSED,this.onWindowClosed.bind(this));
+    // finWindow.removeEventListener(fromModels.HIDDEN,this.onWindowHide.bind(this));
+    // finWindow.removeEventListener(fromModels.SHOW_REQUESTED,this.onWindowShowRequested.bind(this));
+    // finWindow.removeEventListener(fromModels.SHOWN,this.onWindowShown.bind(this));
+    finWindow.removeEventListener(fromModels.RESTORED,this.onWindowRestored.bind(this));
+    finWindow.removeEventListener(fromModels.MINIMIZED,this.onWindowMinimized.bind(this));
+    finWindow.removeEventListener(fromModels.MAXIMIZED,this.onWindowMaximized.bind(this));
+    finWindow.removeEventListener(fromModels.BOUNDS_CHANGED,this.onWindowSizeChanged.bind(this));
   }
   private onWindowCloseRequested(evt: any) {
+    this.removeEvents();
+    this.notifier.next({id : this.windowInfo.id, type: fromModels.CLOSE_REQUESTED});
     console.info('onWindowCloseRequested');
   }
   private onWindowClosed(evt: any) {
@@ -125,11 +127,14 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   private onWindowRestored(evt: any) {
     console.info('onWindowRestored');
+    this.notifier.next({id : this.windowInfo.id, type: fromModels.RESTORED});
   }
   private onWindowMinimized(evt: any) {
+    this.notifier.next({id : this.windowInfo.id, type: fromModels.MINIMIZED});
     console.info('onWindowMinimized');
   }
   private onWindowMaximized(evt: any) {
+    this.notifier.next({id : this.windowInfo.id, type: fromModels.MAXIMIZED});
     console.info('onWindowMaximized');
   }
   private onWindowSizeChanged(evt: any) {

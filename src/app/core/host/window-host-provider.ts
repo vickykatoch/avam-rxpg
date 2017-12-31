@@ -1,12 +1,13 @@
-import { WinInfo } from "../../models/index";
+import { WinInfo, WindowNotification } from "../../models";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
 
 export abstract class WindowHostProvider {
   windowInfo : WinInfo;
-  protected closeNotifier = new Subject<boolean>();
-  closed$ = this.closeNotifier.asObservable();
+  protected notifier = new Subject<WindowNotification>();
+  notifications$ = this.notifier.asObservable();
+
   protected _provider : any;
 
   protected constructor() {
