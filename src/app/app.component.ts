@@ -35,19 +35,19 @@ export class AppComponent {
     },console.error);
   }
   restoreWorkspace() {
-    // const workspaceManager = this.injector.get(WorkspaceManager) as WorkspaceManager;
-    // workspaceManager.restoreWorkspace();
-    const componentBuilder = this.injector.get(AppComponentManagerService) as AppComponentManagerService;
-    const observable$ = zip(
-      this.getC1(componentBuilder),
-      this.getC2(componentBuilder),
-      this.getC3(componentBuilder)
-    );
-    observable$.subscribe(x=> {
-      console.log(x);
-    },error=> {
-      console.log(error);
-    });
+    const workspaceManager = this.injector.get(WorkspaceManager) as WorkspaceManager;
+    workspaceManager.restoreWorkspace();
+    // const componentBuilder = this.injector.get(AppComponentManagerService) as AppComponentManagerService;
+    // const observable$ = zip(
+    //   this.getC1(componentBuilder),
+    //   this.getC2(componentBuilder),
+    //   this.getC3(componentBuilder)
+    // );
+    // observable$.subscribe(x=> {
+    //   console.log(x);
+    // },error=> {
+    //   console.log(error);
+    // });
   }
   saveWorkspace() {
     const workspaceManager = this.injector.get(WorkspaceManager) as WorkspaceManager;
