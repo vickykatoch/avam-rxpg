@@ -16,6 +16,8 @@ export abstract class WindowHostProvider {
   get Provider() : any {
     return this._provider;
   }
+  abstract close(force?: boolean): void;
+  abstract show() : void;
 
   static createNew(options: WinInfo) : Observable<WindowHostProvider> {
     throw new Error('Method must be written in child classes as this is just a template');

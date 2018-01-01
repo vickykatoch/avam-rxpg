@@ -20,7 +20,7 @@ export class ChildAppWorkspaceManagerService extends WorkspaceManager {
 
   //#region Private Fields
   private logger = console;
-  // private workspaceString = '';
+  private workspaceString = '';
   //#endregion
 
   //#region ctor

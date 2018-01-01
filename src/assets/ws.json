@@ -1,0 +1,64 @@
+{
+  "windows": {
+    "main": {
+      "id": "RX.PLAYGROUND",
+      "name": "RX.PLAYGROUND",
+      "left": 1130,
+      "top": 555,
+      "height": 300,
+      "width": 300,
+      "isPersistable": true
+    },
+    "children": {
+      "5313": {
+        "id": 5313,
+        "name": "RX.PLAYGROUND-5313",
+        "top": 50,
+        "left": 50,
+        "height": 600,
+        "width": 400,
+        "taskbarIconGroup": "RX.PLAYGROUND",
+        "alwaysOnTop": false,
+        "opacity": 1,
+        "resizable": true,
+        "isPersistable": true,
+        "showTaskbarIcon": true,
+        "state": "normal"
+      },
+      "8370": {
+        "id": 8370,
+        "name": "RX.PLAYGROUND-8370",
+        "top": 50,
+        "left": 50,
+        "height": 600,
+        "width": 400,
+        "taskbarIconGroup": "RX.PLAYGROUND",
+        "alwaysOnTop": false,
+        "opacity": 1,
+        "resizable": true,
+        "isPersistable": true,
+        "showTaskbarIcon": true,
+        "state": "normal"
+      }
+    }
+  },
+  "components": {
+    "5313": {
+      "id": 5313,
+      "title": "MSFT",
+      "type": "MAIN-HOST",
+      "state": {
+        "indicative": "MSFT.DOW"
+      }
+    },
+    "8370": {
+      "id": 8370,
+      "title": "MSFT",
+      "type": "MAIN-HOST",
+      "state": {
+        "indicative": "MSFT.DOW"
+      }
+    }
+  },
+  "layout": {}
+}

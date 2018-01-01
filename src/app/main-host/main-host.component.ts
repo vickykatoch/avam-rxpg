@@ -22,6 +22,10 @@ export class MainHostComponent extends UIComponentBase  {
   }
   //#endregion
 
+  onClose() {
+    this.host.close();
+  }
+
   // #region Base Class Overrides
   applyState(): void {
 

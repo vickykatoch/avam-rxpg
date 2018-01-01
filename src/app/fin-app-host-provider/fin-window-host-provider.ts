@@ -19,6 +19,24 @@ export class FinWindowHostProvider extends WindowHostProvider {
   }
   //#endregion
 
+  close(force?: boolean): void {
+    if(force) {
+      (this._provider as fin.OpenFinWindow).close(true, ()=> {
+        this.logger.info('Window is closed');
+      },error=> {
+        this.logger.error('Error occurred while hiding the window ', error);
+      });
+    } else {
+      (this._provider as fin.OpenFinWindow).hide(()=> {
+        this.logger.info('Window is hidden');
+      },error=> {
+        this.logger.error('Error occurred while hiding the window ', error);
+      });
+    }
+  }
+  show() : void {
+
+  }
   //#region Singleton methods
   static wrap(windowInstance: fin.OpenFinWindow, isPersistable: boolean): Promise<FinWindowHostProvider> {
     const winProvider = new FinWindowHostProvider(windowInstance);
@@ -92,7 +110,7 @@ export class FinWindowHostProvider extends WindowHostProvider {
     const finWindow = this._provider as fin.OpenFinWindow;
     finWindow.addEventListener(fromModels.CLOSED, this.onWindowClosed.bind(this));
 
-    // finWindow.addEventListener(fromModels.CLOSE_REQUESTED, this.onWindowCloseRequested.bind(this)); 
+    // finWindow.addEventListener(fromModels.CLOSE_REQUESTED, this.onWindowCloseRequested.bind(this));
     // finWindow.addEventListener(fromModels.HIDDEN,this.onWindowHide.bind(this));
     // finWindow.addEventListener(fromModels.SHOW_REQUESTED,this.onWindowShowRequested.bind(this));
     // finWindow.addEventListener(fromModels.SHOWN,this.onWindowShown.bind(this));
